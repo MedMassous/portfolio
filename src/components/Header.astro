@@ -1,0 +1,44 @@
+---
+import { Download, Menu, Moon, Sun } from '@lucide/astro';
+import { profile } from '../data/profile';
+
+const links = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'certifications', label: 'Certifications' },
+  { id: 'contact', label: 'Contact' },
+];
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label={`${profile.name} — home`}>
+      <strong>{profile.name.toUpperCase()}</strong>
+      <span>SYSTEM: PORTFOLIO</span>
+    </a>
+
+    <div class="header-status" role="status">
+      <span class="dot green pulse" aria-hidden="true"></span>
+      STATUS: <b>{profile.status}</b>
+    </div>
+
+    <nav id="site-nav" class="nav" aria-label="Primary">
+      {links.map((l) => (
+        <a href={`/#${l.id}`} data-section={l.id}>{l.label}</a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <a class="icon-btn" href={profile.cvPath} download aria-label="Download CV" title="Download CV">
+        <Download aria-hidden="true" />
+      </a>
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle light / dark theme" title="Toggle theme">
+        <Moon class="icon-moon" aria-hidden="true" />
+        <Sun class="icon-sun" aria-hidden="true" />
+      </button>
+      <button class="icon-btn menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <Menu aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</header>

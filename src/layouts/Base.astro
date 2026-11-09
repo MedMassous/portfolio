@@ -1,0 +1,128 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import { profile } from '../data/profile';
+import { Terminal } from '@lucide/astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+}
+
+const {
+  title = `${profile.name} — Cloud Infrastructure Engineering Student`,
+  description = profile.description,
+  path = '/',
+} = Astro.props;
+
+const canonical = new URL(path, profile.siteUrl).toString();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  url: profile.siteUrl,
+  jobTitle: profile.title,
+  alumniOf: { '@type': 'CollegeOrUniversity', name: profile.school },
+  address: { '@type': 'PostalAddress', addressCountry: 'TN' },
+  knowsAbout: ['Linux administration', 'Ansible', 'AWS', 'Docker', 'Infrastructure automation'],
+  sameAs: [profile.github, profile.linkedin].filter((u) => !u.includes('TODO')),
+};
+---
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0b0e14" />
+    <meta name="author" content={profile.name} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={`${profile.name} — Portfolio`} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Apply saved theme before first paint to avoid a flash -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          // Dark is the designed default; light only if the visitor chose it.
+          document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span class="mono"><Terminal size={13} style="vertical-align:-2px;margin-right:6px" aria-hidden="true" />{profile.name.toUpperCase()} · PORTFOLIO</span>
+        <span>
+          The control-center interface is a design concept. It does not show live systems or metrics.
+        </span>
+      </div>
+    </footer>
+
+    <script>
+      // Theme toggle
+      const root = document.documentElement;
+      document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch {}
+          const meta = document.querySelector('meta[name="theme-color"]');
+          meta?.setAttribute('content', next === 'light' ? '#f4f6fa' : '#0b0e14');
+        });
+      });
+
+      // Mobile menu
+      const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+      const nav = document.querySelector<HTMLElement>('#site-nav');
+      const setMenu = (open: boolean) => {
+        nav?.classList.toggle('open', open);
+        menuBtn?.setAttribute('aria-expanded', String(open));
+      };
+      menuBtn?.addEventListener('click', () => setMenu(!nav?.classList.contains('open')));
+      nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+
+      // Scroll spy (home page only)
+      const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('#site-nav a[data-section]'));
+      const sections = links
+        .map((l) => document.getElementById(l.dataset.section!))
+        .filter((s): s is HTMLElement => !!s);
+      if (sections.length && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((en) => {
+              if (en.isIntersecting) {
+                links.forEach((l) =>
+                  l.setAttribute('aria-current', String(l.dataset.section === en.target.id)),
+                );
+              }
+            });
+          },
+          { rootMargin: '-45% 0px -50% 0px' },
+        );
+        sections.forEach((s) => io.observe(s));
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+---
+import { profile, focusAreas, careerTargets } from '../data/profile';
+import { certifications } from '../data/certifications';
+
+const cards = [
+  {
+    title: 'PROFILE',
+    verified: false,
+    items: [profile.studies, profile.school, profile.country],
+  },
+  {
+    title: 'CERTIFICATIONS',
+    verified: true,
+    items: certifications.map((c) => (c.code === 'CLF-C02' ? 'AWS Certified Cloud Practitioner' : c.code)),
+  },
+  { title: 'FOCUS AREAS', verified: false, items: [...focusAreas] },
+  { title: 'CAREER TARGET', verified: false, items: [...careerTargets] },
+];
+---
+<section id="overview" class="section" aria-labelledby="overview-title" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">// 01 · system overview</span>
+      <h2 id="overview-title">At a glance</h2>
+      <p>A quick summary of who I am, what I hold, and the roles I am aiming for.</p>
+    </div>
+    <div class="grid-4">
+      {cards.map((c) => (
+        <article class={`panel card ${c.verified ? 'verified' : ''}`}>
+          <div class="panel-bar">
+            <span>{c.title}</span>
+            <span class={`dot ${c.verified ? 'green' : 'blue'}`} aria-hidden="true"></span>
+          </div>
+          <div class="card-body">
+            <ul>
+              {c.items.map((i) => <li>{i}</li>)}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

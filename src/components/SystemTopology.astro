@@ -1,0 +1,117 @@
+---
+import { ExternalLink } from '@lucide/astro';
+import { topologyNodes, topologyEdges } from '../data/topology';
+
+const W = 150;
+const H = 54;
+const byId = Object.fromEntries(topologyNodes.map((n) => [n.id, n]));
+
+// Anchor each edge on the node borders so lines never run under the boxes.
+function anchor(a: { x: number; y: number }, b: { x: number; y: number }) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const sx = dx === 0 ? Infinity : (W / 2) / Math.abs(dx);
+  const sy = dy === 0 ? Infinity : (H / 2) / Math.abs(dy);
+  const s = Math.min(sx, sy);
+  return { x: a.x + dx * s, y: a.y + dy * s };
+}
+
+const edges = topologyEdges.map((e) => {
+  const a = byId[e.from];
+  const b = byId[e.to];
+  const p1 = anchor(a, b);
+  const p2 = anchor(b, a);
+  return { ...e, p1, p2, mx: (p1.x + p2.x) / 2, my: (p1.y + p2.y) / 2 };
+});
+---
+<section id="topology" class="section" aria-labelledby="topology-title" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">// 02 · infrastructure topology</span>
+      <h2 id="topology-title">How the technologies fit together</h2>
+      <p>
+        A conceptual map of my toolset: Linux at the base, automation and containers on top,
+        cloud as the platform, monitoring to keep it honest. Select a node to read the related experience.
+      </p>
+    </div>
+
+    <div class="topology-wrap" data-topology>
+      <div>
+        <div class="panel topology-canvas">
+          <svg viewBox="0 0 800 420" role="group" aria-label="Interactive technology map. Use the node buttons to read details.">
+            <g aria-hidden="true">
+              {edges.map((e) => (
+                <>
+                  <line class="edge" data-from={e.from} data-to={e.to} x1={e.p1.x} y1={e.p1.y} x2={e.p2.x} y2={e.p2.y} />
+                  <text class="edge-label" x={e.mx} y={e.my - 6} text-anchor="middle">{e.label}</text>
+                </>
+              ))}
+            </g>
+            {topologyNodes.map((n) => (
+              <g class="node" data-node={n.id} tabindex="-1" aria-hidden="true" transform={`translate(${n.x - W / 2} ${n.y - H / 2})`}>
+                <rect width={W} height={H} rx="6" />
+                <text class="n-label" x={W / 2} y="23" text-anchor="middle">{n.label}</text>
+                <text class="n-sub" x={W / 2} y="40" text-anchor="middle">{n.sub}</text>
+              </g>
+            ))}
+          </svg>
+        </div>
+        <div class="node-list" role="group" aria-label="Technology nodes">
+          {topologyNodes.map((n, i) => (
+            <button type="button" class="node-chip" data-chip={n.id} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls="topology-detail">
+              {n.label}
+              <small>{n.sub}</small>
+            </button>
+          ))}
+        </div>
+        <p class="disclaimer">Conceptual diagram only. These are not live servers or connections.</p>
+      </div>
+
+      <div class="panel topology-detail" id="topology-detail" aria-live="polite">
+        <div class="panel-bar"><span>NODE DETAILS</span><span class="dot blue" aria-hidden="true"></span></div>
+        <div class="detail-body">
+          {topologyNodes.map((n, i) => (
+            <div data-detail={n.id} hidden={i !== 0}>
+              <h3>{n.label}</h3>
+              <span class="meta">{n.sub}</span>
+              <p>{n.description}</p>
+              {n.related && (
+                <div class="related">
+                  {n.related.map((r) => (
+                    <a href={r.href}><ExternalLink size={14} aria-hidden="true" style="margin-right:6px" />{r.label}</a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .topology-canvas { overflow-x: auto; }
+  .topology-canvas svg { min-width: 560px; }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-topology]');
+  if (root) {
+    const nodes = root.querySelectorAll<SVGGElement>('[data-node]');
+    const chips = root.querySelectorAll<HTMLButtonElement>('[data-chip]');
+    const details = root.querySelectorAll<HTMLElement>('[data-detail]');
+    const edges = root.querySelectorAll<SVGLineElement>('.edge');
+
+    const select = (id: string) => {
+      nodes.forEach((n) => n.classList.toggle('selected', n.dataset.node === id));
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.chip === id)));
+      details.forEach((d) => (d.hidden = d.dataset.detail !== id));
+      edges.forEach((e) => e.classList.toggle('active', e.dataset.from === id || e.dataset.to === id));
+    };
+
+    nodes.forEach((n) => n.addEventListener('click', () => select(n.dataset.node!)));
+    chips.forEach((c) => c.addEventListener('click', () => select(c.dataset.chip!)));
+    select('linux');
+  }
+</script>

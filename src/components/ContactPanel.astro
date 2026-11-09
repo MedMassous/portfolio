@@ -1,0 +1,78 @@
+---
+import { Mail, Copy, Check, Download } from '@lucide/astro';
+import BrandIcon from './BrandIcon.astro';
+import { profile } from '../data/profile';
+---
+<section id="contact" class="section" aria-labelledby="contact-title" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">// 06 · contact</span>
+      <h2 id="contact-title">Let’s connect</h2>
+      <p>I am looking for an internship in cloud support, cloud engineering or DevOps. The fastest way to reach me is email.</p>
+    </div>
+
+    <div class="panel terminal">
+      <div class="panel-bar">
+        <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>contact — shell</span>
+        <span class="dot green pulse" aria-hidden="true"></span>
+      </div>
+      <div class="terminal-body">
+        <p class="prompt" aria-hidden="true"><span class="sign">$</span>connect --to {profile.slug}<span class="cursor"></span></p>
+        <p class="contact-lead">Choose a connection method:</p>
+        <div class="connect-list">
+          <div class="copy-row">
+            <a class="connect-item" href={`mailto:${profile.email}`}>
+              <Mail aria-hidden="true" />
+              <span><span class="label">Email</span><span class="value" data-email>{profile.email}</span></span>
+            </a>
+            <button type="button" class="icon-btn copy-btn" data-copy={profile.email} aria-label="Copy email address" title="Copy email address" style="height:auto;min-height:56px">
+              <Copy class="icon-copy" aria-hidden="true" />
+              <Check class="icon-check" aria-hidden="true" />
+            </button>
+          </div>
+          <a class="connect-item" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+            <BrandIcon name="linkedin" />
+            <span><span class="label">LinkedIn</span><span class="value">Open profile</span></span>
+          </a>
+          <a class="connect-item" href={profile.github} target="_blank" rel="noopener noreferrer">
+            <BrandIcon name="github" />
+            <span><span class="label">GitHub</span><span class="value">Open profile</span></span>
+          </a>
+          <a class="connect-item" href={profile.cvPath} download>
+            <Download aria-hidden="true" />
+            <span><span class="label">Resume</span><span class="value">Download CV (PDF)</span></span>
+          </a>
+        </div>
+        <p class="sr-only" role="status" aria-live="polite" data-copy-status></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-copy]');
+  const status = document.querySelector<HTMLElement>('[data-copy-status]');
+  btn?.addEventListener('click', async () => {
+    const value = btn.dataset.copy ?? '';
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      // Fallback for older browsers / non-secure contexts
+      const ta = document.createElement('textarea');
+      ta.value = value;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch {}
+      ta.remove();
+    }
+    btn.classList.add('copied');
+    if (status) status.textContent = 'Email address copied to clipboard';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      if (status) status.textContent = '';
+    }, 2000);
+  });
+</script>

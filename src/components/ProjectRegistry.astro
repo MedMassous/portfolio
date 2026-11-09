@@ -1,0 +1,103 @@
+---
+import { ChevronDown, ArrowRight } from '@lucide/astro';
+import { publishedProjects, allStackTags, statusLabels, type ProjectStatus } from '../data/projects';
+
+const tone: Record<ProjectStatus, string> = {
+  completed: 'green',
+  'in-progress': 'amber',
+  planned: 'blue',
+  lab: 'slate',
+};
+---
+<section id="projects" class="section" aria-labelledby="projects-title" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">// 03 · project deployment registry</span>
+      <h2 id="projects-title">Projects</h2>
+      <p>
+        Each project is shown as a record with an honest status: completed work,
+        work in progress, planned projects and learning labs are clearly separated.
+      </p>
+    </div>
+
+    <div data-registry>
+      <div class="filters" role="group" aria-label="Filter projects by technology">
+        <span class="meta">FILTER:</span>
+        <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+        {allStackTags.map((t) => (
+          <button class="chip" type="button" data-filter={t} aria-pressed="false">{t}</button>
+        ))}
+      </div>
+
+      <div class="registry">
+        {publishedProjects.map((p) => (
+          <article class="panel record" data-stack={p.stack.join('|')}>
+            <button
+              class="record-head"
+              type="button"
+              aria-expanded="false"
+              aria-controls={`rec-${p.slug}`}
+            >
+              <span class="record-name">PROJECT: {p.name}</span>
+              <ChevronDown class="chev" aria-hidden="true" />
+              <span class="record-sub">
+                <span class={`badge ${tone[p.status]}`}>
+                  <span class={`dot ${tone[p.status]} ${p.status === 'in-progress' ? 'pulse' : ''}`} aria-hidden="true"></span>
+                  {statusLabels[p.status]}
+                </span>
+                <span class="meta">TYPE: {p.type}</span>
+              </span>
+            </button>
+            <div class="record-panel" id={`rec-${p.slug}`} hidden>
+              <div>
+                <p>{p.summary}</p>
+                {p.note && <p class="meta" style="text-transform:none;letter-spacing:0.02em">{p.note}</p>}
+                <a class="btn" href={`/projects/${p.slug}/`}>Open case study <ArrowRight aria-hidden="true" /></a>
+              </div>
+              <dl class="kv">
+                <dt>Status</dt><dd>{statusLabels[p.status]}</dd>
+                <dt>Type</dt><dd>{p.type}</dd>
+                <dt>Stack</dt>
+                <dd><div class="stack-list">{p.stack.map((s) => <span class="tag">{s}</span>)}</div></dd>
+              </dl>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="empty-state" data-empty hidden>No projects use that technology yet.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-registry]');
+  if (root) {
+    // Expand / collapse
+    root.querySelectorAll<HTMLButtonElement>('.record-head').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        const panel = document.getElementById(btn.getAttribute('aria-controls')!);
+        if (panel) panel.hidden = open;
+      });
+    });
+
+    // Filter by technology
+    const chips = root.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const records = root.querySelectorAll<HTMLElement>('.record');
+    const empty = root.querySelector<HTMLElement>('[data-empty]');
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const f = chip.dataset.filter!;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        let visible = 0;
+        records.forEach((r) => {
+          const show = f === 'all' || (r.dataset.stack ?? '').split('|').includes(f);
+          r.hidden = !show;
+          if (show) visible++;
+        });
+        if (empty) empty.hidden = visible > 0;
+      });
+    });
+  }
+</script>

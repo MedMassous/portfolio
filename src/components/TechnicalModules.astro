@@ -1,0 +1,33 @@
+---
+import { Terminal, Workflow, Cloud, Container, Network } from '@lucide/astro';
+import { skillModules } from '../data/skills';
+
+const icons = { terminal: Terminal, workflow: Workflow, cloud: Cloud, container: Container, network: Network };
+---
+<section id="skills" class="section" aria-labelledby="skills-title" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">// 04 · technical capabilities</span>
+      <h2 id="skills-title">Skills</h2>
+      <p>Five modules covering how systems are built, automated, hosted, packaged and connected.</p>
+    </div>
+    <div class="module-grid">
+      {skillModules.map((m) => {
+        const Icon = icons[m.icon];
+        return (
+          <article class="panel module">
+            <div class="module-top">
+              <span class="meta">MODULE {m.number}</span>
+              <Icon aria-hidden="true" />
+            </div>
+            <h3>{m.name}</h3>
+            <p class="plain">{m.plain}</p>
+            <div class="tags">
+              {m.items.map((i) => <span class="tag">{i}</span>)}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
