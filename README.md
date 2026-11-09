@@ -2,19 +2,9 @@
 
 Static portfolio built with **Astro + TypeScript + vanilla CSS + Lucide icons**. No backend, no database.
 
-## Before you publish (required)
+## Before you publish
 
-All personal facts live in `src/data/`. The build prints a warning for anything still missing.
-
-| File | What to fill in |
-| --- | --- |
-| `src/data/profile.ts` | `email`, `github`, `linkedin`, `siteUrl` |
-| `public/cv/Mohamed-Massous-CV.pdf` | Add your CV (the path is set in `profile.ts` → `cvPath`) |
-| `src/data/certifications.ts` | `verifyUrl` for each certification (Red Hat verification page / AWS Credly badge) |
-| `src/data/projects.ts` | Verify **Doura**'s real status, write its overview, then set `published: true` |
-| `astro.config.mjs` and `public/robots.txt` | Final production URL |
-
-Nothing is invented: certification links, project statuses and contact details are only shown once you provide them.
+All personal facts live in `src/data/`. Contact details, certification links, projects and the production URL are filled in. The CV is hosted as a Google Doc (`cvPath` in `profile.ts`); make sure it is shared as "Anyone with the link can view".
 
 ## Commands
 

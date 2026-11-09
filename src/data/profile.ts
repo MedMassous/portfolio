@@ -14,13 +14,12 @@ export const profile = {
   country: 'Tunisia',
   studies: 'IT Engineering Student',
 
-  // TODO: replace with your public contact details.
-  email: 'TODO-your-email@example.com',
-  github: 'https://github.com/TODO-your-github-username',
-  linkedin: 'https://www.linkedin.com/in/TODO-your-linkedin-handle',
+  email: 'contact.mohamed.massous@gmail.com',
+  github: 'https://github.com/MedMassous',
+  linkedin: 'https://www.linkedin.com/in/massous-med/',
 
-  // TODO: place your CV at public/cv/Mohamed-Massous-CV.pdf (or change this path).
-  cvPath: '/cv/Mohamed-Massous-CV.pdf',
+  // CV is hosted as a Google Doc (must be shared "Anyone with the link can view").
+  cvPath: 'https://docs.google.com/document/d/1j6DXKfHgr8CBEmGzvTCsD82hq8rgSwh1st-06ce8ILk/edit?tab=t.0',
 
   siteUrl: 'https://mohamed-massous.pages.dev',
   description:

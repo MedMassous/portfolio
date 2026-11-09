@@ -7,7 +7,7 @@ export interface Certification {
   plain: string; // plain-language explanation for non-technical readers
   /**
    * Official verification link (Red Hat Certification Verification / AWS Credly badge, etc.).
-   * TODO: paste the real public verification URL. Left empty on purpose: it is never invented.
+   * Public Credly verification URL. Leave empty if none exists: it is never invented.
    */
   verifyUrl: string;
   /** Official public page describing the certification itself (safe, not a personal credential). */
@@ -23,7 +23,7 @@ export const certifications: Certification[] = [
     scope: 'RHEL 9',
     plain:
       'Hands-on exam proving the ability to install, configure and administer Red Hat Enterprise Linux servers.',
-    verifyUrl: '',
+    verifyUrl: 'https://www.credly.com/badges/07623716-ce8c-4b42-b3d8-b7ddaf61db20',
     infoUrl: 'https://www.redhat.com/en/services/certification/rhcsa',
   },
   {
@@ -34,7 +34,7 @@ export const certifications: Certification[] = [
     scope: 'Ansible automation',
     plain:
       'Hands-on exam proving the ability to automate Linux administration at scale using Ansible.',
-    verifyUrl: '',
+    verifyUrl: 'https://www.credly.com/badges/2a290e1d-6aa2-44cc-8a69-985816845055',
     infoUrl: 'https://www.redhat.com/en/services/certification/rhce',
   },
   {
@@ -45,7 +45,7 @@ export const certifications: Certification[] = [
     scope: 'AWS Cloud fundamentals',
     plain:
       'Foundational AWS certification covering cloud concepts, core services, security, and pricing.',
-    verifyUrl: '',
+    verifyUrl: 'https://www.credly.com/badges/88efa5dd-6c7c-4c06-9e72-798bbf46a98c',
     infoUrl: 'https://aws.amazon.com/certification/certified-cloud-practitioner/',
   },
 ];

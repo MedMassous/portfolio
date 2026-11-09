@@ -15,7 +15,7 @@ import { profile } from '../data/profile';
       <p class="tagline">“{profile.tagline}”</p>
       <div class="hero-actions">
         <a class="btn primary" href="#projects">View infrastructure projects <ArrowRight aria-hidden="true" /></a>
-        <a class="btn" href={profile.cvPath} download><Download aria-hidden="true" /> Download professional CV</a>
+        <a class="btn" href={profile.cvPath} target="_blank" rel="noopener noreferrer"><Download aria-hidden="true" /> View professional CV</a>
         <a class="btn" href={profile.github} target="_blank" rel="noopener noreferrer"><BrandIcon name="github" /> GitHub</a>
         <a class="btn" href={profile.linkedin} target="_blank" rel="noopener noreferrer"><BrandIcon name="linkedin" /> LinkedIn</a>
       </div>

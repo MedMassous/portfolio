@@ -50,6 +50,7 @@ export const projects: Project[] = [
       'Model infrastructure data in a relational database.',
       'Apply operations thinking (configuration, deployment, observability) to a real application.',
     ],
+    repoUrl: 'https://github.com/MedMassous/cloudops-manager',
     note: 'Work in progress. Scope and features are still evolving.',
   },
   {
@@ -77,14 +78,21 @@ export const projects: Project[] = [
     name: 'DOURA',
     type: 'AWS APPLICATION',
     stack: ['AWS', 'DynamoDB', 'REST API'],
-    // TODO: verify the real status (completed / in-progress), then set published: true.
     status: 'in-progress',
-    published: false,
-    summary: 'An application built on AWS using DynamoDB and a REST API.',
+    published: true,
+    summary:
+      'A serverless platform that lets citizens take a ticket remotely for public services instead of queuing in person.',
     overview: [
-      'TODO: describe Doura in plain language once its real status has been verified.',
+      'Doura is a smart virtual queue platform for public services, aimed at Tunisian public offices where people can spend hours in physical queues without knowing how long they will wait.',
+      'Instead of waiting on site, citizens take a ticket remotely, follow their position and estimated wait time, and are notified when their turn comes. It is built as a serverless cloud application on AWS, using DynamoDB for data and a REST API.',
     ],
-    goals: ['TODO'],
+    goals: [
+      'Design a serverless architecture on AWS (Lambda, DynamoDB, REST API).',
+      'Model a real-world public-service problem: queues, tickets and wait-time estimates.',
+      'Practise infrastructure as code and testing on a cloud application.',
+    ],
+    repoUrl: 'https://github.com/Houssemchabbeh/Doura-Smart-Virtual-Queue-Platform-for-Public-Services',
+    note: 'Work in progress. Scope and features are still evolving.',
   },
 ];
 
