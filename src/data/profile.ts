@@ -25,7 +25,7 @@ export const profile = {
   // CV hosted on Google Docs (public link access required).
   cvPath: 'https://docs.google.com/document/d/1j6DXKfHgr8CBEmGzvTCsD82hq8rgSwh1st-06ce8ILk/edit?tab=t.0',
 
-  siteUrl: 'https://portfolio.ytbhamassous.workers.dev',
+  siteUrl: 'https://portfolio.mohamed-massous.workers.dev/',
   description:
     'Mohamed Massous — Cloud Infrastructure Management Engineering student at TEK-UP University, Tunisia. Focused on Linux administration, Red Hat technologies, Ansible automation, AWS cloud infrastructure and troubleshooting. RHCSA, RHCE and AWS Certified Cloud Practitioner.',
 

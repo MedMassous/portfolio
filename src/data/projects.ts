@@ -119,41 +119,6 @@ export const projects: Project[] = [
     note:
       'Work in progress. Implementation and project scope are still evolving.',
   },
-
-  {
-    slug: 'ansible-linux-automation',
-    name: 'ANSIBLE-LINUX-AUTOMATION',
-    type: 'CONFIGURATION MANAGEMENT',
-
-    stack: [
-      'RHEL 9',
-      'Ansible',
-      'Linux',
-      'YAML',
-    ],
-
-    status: 'planned',
-    published: false,
-
-    summary:
-      'A planned project to automate Linux server configuration and administration using Ansible.',
-
-    overview: [
-      'This project is planned as a practical demonstration of Linux administration and configuration management using Red Hat Enterprise Linux 9 and Ansible.',
-
-      'The objective is to transform repetitive server administration tasks into reusable, version-controlled automation playbooks and roles.',
-    ],
-
-    goals: [
-      'Automate baseline configuration and administration of RHEL 9 servers.',
-      'Develop reusable Ansible roles and structured playbooks.',
-      'Manage system users, services, packages and configurations through automation.',
-      'Document automation workflows and troubleshooting procedures.',
-    ],
-
-    note:
-      'Planned. Development has not started yet.',
-  },
 ];
 
 /**

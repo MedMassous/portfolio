@@ -38,12 +38,6 @@ export const topologyNodes: TopologyNode[] = [
     y: 200,
     description:
       'Automating Linux administration through reusable playbooks, roles and configuration management. RHCE-certified in Ansible automation, with a planned RHEL 9 automation project.',
-    related: [
-      {
-        label: 'ansible-linux-automation (planned)',
-        href: '/projects/ansible-linux-automation/',
-      },
-    ],
   },
   {
     id: 'aws',
