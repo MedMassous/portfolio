@@ -1,74 +1,183 @@
+
 ---
 import { ArrowLeft, ExternalLink } from '@lucide/astro';
 import Base from '../../layouts/Base.astro';
-import { publishedProjects, statusLabels, type ProjectStatus } from '../../data/projects';
+import {
+  publishedProjects,
+  statusLabels,
+  type ProjectStatus,
+} from '../../data/projects';
 import { profile } from '../../data/profile';
 
 export function getStaticPaths() {
-  return publishedProjects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+  return publishedProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
 }
 
 const { project } = Astro.props;
+
 const tone: Record<ProjectStatus, string> = {
   completed: 'green',
   'in-progress': 'amber',
   planned: 'blue',
   lab: 'slate',
 };
+
 const statusNotice: Partial<Record<ProjectStatus, string>> = {
-  'in-progress': 'This project is still being built. Details may change.',
-  planned: 'This project is planned and has not started yet.',
-  lab: 'This is a learning lab, not a production system.',
+  'in-progress':
+    'This project is actively under development. Features and implementation details may change.',
+  planned:
+    'This project is planned but development has not started yet.',
+  lab:
+    'This is an experimental learning environment, not a production system.',
+  completed:
+    'This project has been completed. See the repository for implementation details.',
+};
+
+const statusDescription: Record<ProjectStatus, string> = {
+  completed: 'Finished project',
+  'in-progress': 'Currently being developed',
+  planned: 'Not started yet',
+  lab: 'Experimental learning project',
 };
 ---
+
 <Base
   title={`${project.name} — ${profile.name}`}
   description={project.summary}
   path={`/projects/${project.slug}/`}
 >
   <div class="container case">
-    <a class="back-link" href="/#projects"><ArrowLeft size={16} aria-hidden="true" /> BACK TO REGISTRY</a>
 
+    <a class="back-link" href="/#projects">
+      <ArrowLeft size={16} aria-hidden="true" />
+      BACK TO PROJECT REGISTRY
+    </a>
+
+    <!-- Project heading -->
     <header class="panel case-head">
-      <span class="meta">DEPLOYMENT RECORD · {project.type}</span>
+      <span class="meta">
+        PROJECT RECORD · {project.type}
+      </span>
+
       <h1>{project.name}</h1>
-      <span class={`badge ${tone[project.status]}`}>
-        <span class={`dot ${tone[project.status]}`} aria-hidden="true"></span>
+
+      <span
+        class={`badge ${tone[project.status]}`}
+        aria-label={`Project status: ${statusLabels[project.status]}`}
+      >
+        <span
+          class={`dot ${tone[project.status]}`}
+          aria-hidden="true"
+        ></span>
         {statusLabels[project.status]}
       </span>
-      <p style="margin-top:16px;margin-bottom:0;max-width:62ch">{project.summary}</p>
+
+      <p style="margin-top:16px;margin-bottom:0;max-width:62ch">
+        {project.summary}
+      </p>
     </header>
 
-    {statusNotice[project.status] && <p class="notice">{statusNotice[project.status]}</p>}
+    <!-- Project status notice -->
+    <div class={`notice notice-${tone[project.status]}`} role="status">
+      <strong>{statusDescription[project.status]}.</strong>
+      {' '}{statusNotice[project.status]}
+    </div>
 
     <div class="case-grid">
+
+      <!-- Main content -->
       <div style="display:grid;gap:20px">
+
         <section class="panel case-section">
           <h2>Overview</h2>
-          {project.overview.map((p) => <p>{p}</p>)}
+
+          {project.overview.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
         </section>
+
         <section class="panel case-section">
-          <h2>Goals</h2>
-          <ul>{project.goals.map((g) => <li>{g}</li>)}</ul>
+          <h2>Project Goals</h2>
+
+          <ul>
+            {project.goals.map((goal) => (
+              <li>{goal}</li>
+            ))}
+          </ul>
         </section>
+
       </div>
 
-      <aside class="panel case-section">
-        <h2>Record</h2>
-        <dl class="kv" style="grid-template-columns:70px 1fr">
-          <dt>Type</dt><dd>{project.type}</dd>
-          <dt>Status</dt><dd>{statusLabels[project.status]}</dd>
+      <!-- Project metadata -->
+      <aside class="panel case-section" aria-label="Project details">
+
+        <h2>Project Record</h2>
+
+        <dl class="kv" style="grid-template-columns:80px 1fr">
+
+          <dt>Type</dt>
+          <dd>{project.type}</dd>
+
+          <dt>Status</dt>
+          <dd>{statusLabels[project.status]}</dd>
+
           <dt>Stack</dt>
-          <dd><div class="stack-list">{project.stack.map((s) => <span class="tag">{s}</span>)}</div></dd>
+          <dd>
+            <div class="stack-list">
+              {project.stack.map((technology) => (
+                <span class="tag">{technology}</span>
+              ))}
+            </div>
+          </dd>
+
         </dl>
+
         {(project.repoUrl || project.demoUrl) && (
           <div style="display:grid;gap:10px;margin-top:20px">
-            {project.repoUrl && <a class="btn" href={project.repoUrl} target="_blank" rel="noopener noreferrer">Source code <ExternalLink aria-hidden="true" /></a>}
-            {project.demoUrl && <a class="btn" href={project.demoUrl} target="_blank" rel="noopener noreferrer">Live demo <ExternalLink aria-hidden="true" /></a>}
+
+            {project.repoUrl && (
+              <a
+                class="btn"
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${project.name} source code on GitHub`}
+              >
+                Source code
+                <ExternalLink size={15} aria-hidden="true" />
+              </a>
+            )}
+
+            {project.demoUrl && (
+              <a
+                class="btn"
+                href={project.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${project.name} live demo`}
+              >
+                Live demo
+                <ExternalLink size={15} aria-hidden="true" />
+              </a>
+            )}
+
           </div>
         )}
-        {project.note && <p class="meta" style="text-transform:none;letter-spacing:0.02em;margin-top:18px;margin-bottom:0">{project.note}</p>}
+
+        {project.note && (
+          <p
+            class="meta"
+            style="text-transform:none;letter-spacing:0.02em;margin-top:18px;margin-bottom:0"
+          >
+            {project.note}
+          </p>
+        )}
+
       </aside>
+
     </div>
   </div>
 </Base>
